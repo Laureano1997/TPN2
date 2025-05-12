@@ -21,6 +21,9 @@ Se agregó a este sistema un display LCD de 16x2 que indicará el estado del tan
 
 En caso de quedarse sin agua, el sistema encenderá un LED indicando que el sistema no tiene agua, sin embargo si luego de 1 hora no se recarga el agua en el tanque comenzará a sonar un buzzer, enviará un mensaje de alerta al display y otro a la computadora indicando que el sistema está bloqueado por falta de agua.
 
+### Imagenes y videos del sistema implementado:
+https://drive.google.com/drive/folders/1I_2PlFF_FoShoL4chuT25EDY5dH3-PB-?usp=sharing
+
 # Periféricos a utilizar:
 
 -Sensor de Temperatura LM35
