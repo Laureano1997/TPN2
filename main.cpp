@@ -5,6 +5,6 @@ int main()
 {
     greenhouseSystemInit();
     while (true) {
-        greenhouseSystemInit();
+        greenhouseSystemUpdate();
     }
 }
