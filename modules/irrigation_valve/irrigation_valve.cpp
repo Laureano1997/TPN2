@@ -3,7 +3,6 @@
 #include "mbed.h"
 #include "arm_book_lib.h"
 
-#include "water_sensor.h"
 #include "irrigation_valve.h"
 #include "alarm.h"
 
@@ -27,17 +26,21 @@ DigitalOut irrigationValve(D10);   //Electroválvula de irrigación
 
 void irrigationValveInit()
 {
-    irrigationValve = OFF;
+    irrigationValve.write(OFF);
 }
 
 void irrigationValveUpdate()
 {
-    
 }
 
 bool irrigationValveRead()
 {
-    return irrigationValve;
+    return irrigationValve.read();
+}
+
+void irrigationValveWrite(bool state)
+{
+    irrigationValve.write(state);
 }
 
 //=====[Implementations of private functions]==================================
