@@ -28,13 +28,16 @@
 void greenhouseSystemInit()
 {
     userInterfaceInit();
-    //pcSerialComInit();
+    alarmInit();
+    pcSerialComInit();
 }
 
 void greenhouseSystemUpdate()
 {
-    userInterfaceUpdate();  
-    //pcSerialComUpdate();
+    alarmUpdate();
+    userInterfaceUpdate();
+
+    pcSerialComUpdate();
     eventLogUpdate();
     delay(SYSTEM_TIME_INCREMENT_MS);
 }
