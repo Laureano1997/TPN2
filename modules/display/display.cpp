@@ -236,6 +236,13 @@ void displayStringWrite( const char * str )
     }
 }
 
+void displayClearScreen(){
+    displayCharPositionWrite ( 0,0 );
+    displayStringWrite( "                " );
+    displayCharPositionWrite ( 0,1 );
+    displayStringWrite( "                " );
+}
+
 //=====[Implementations of private functions]==================================
 
 static void displayCodeWrite( bool type, uint8_t dataBus )
