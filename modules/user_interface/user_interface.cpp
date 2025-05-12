@@ -10,12 +10,39 @@
 //=====[Declaration of private defines]========================================
 #define DISPLAY_REFRESH_TIME_MS 1000
 
+//=====[Declaration of private data types]=====================================
+
+//=====[Declaration and initialization of public global objects]===============
+
+DigitalOut incorrectCodeLed(LED3);
+DigitalOut systemBlockedLed(LED2);
+
+//=====[Declaration of external public global variables]=======================
+
+//=====[Declaration and initialization of public global variables]=============
+
+//=====[Declaration and initialization of private global variables]============
+
+static bool systemBlockedState = OFF;
+
+//=====[Declarations (prototypes) of private functions]========================
+
 static void userInterfaceDisplayInit();
+static void userInterfaceDisplayUpdate();
+
+//=====[Implementations of public functions]===================================
 
 void userInterfaceInit()
 {
     userInterfaceDisplayInit();
 }
+
+void userInterfaceUpdate()
+{
+    userInterfaceDisplayUpdate();
+}
+
+//=====[Implementations of private functions]==================================
 
 static void userInterfaceDisplayInit()
 {
@@ -26,9 +53,6 @@ static void userInterfaceDisplayInit()
 
     displayCharPositionWrite ( 0,1 );
     displayStringWrite( "Tanque: " );
-    
-    //displayCharPositionWrite ( 0,2 );
-    //displayStringWrite( "Alarm:" );
 }
 
 static void userInterfaceDisplayUpdate()
@@ -41,20 +65,35 @@ static void userInterfaceDisplayUpdate()
 
         accumulatedDisplayTime = 0;
 
-        sprintf(temperatureString, "%.0f", temperatureSensorReadCelsius());
-        displayCharPositionWrite ( 12,0 );
-        displayStringWrite( temperatureString );
-        displayCharPositionWrite ( 14,0 );
-        displayStringWrite( "'C" );
+        if(alarmBuzzerStateRead()){
+            displayClearScreen();
+            displayCharPositionWrite( 5,0 );
+            displayStringWrite( "ALERTA" );
+            displayCharPositionWrite(2, 1);
+            displayStringWrite( "TANQUE VACIO" );
+        }else{
+            displayCharPositionWrite ( 0,0 );
+            displayStringWrite( "Temperatura" );
 
-        displayCharPositionWrite ( 4,1 );
+            displayCharPositionWrite ( 0,1 );
+            displayStringWrite( "Tanque  " );
 
-        if ( waterSensorRead() ) {
-            displayStringWrite( "lleno" );
-        } else {
-            displayStringWrite( "vacío" );
+            floatToStr(temperatureString, temperatureSensorReadCelsius());
+            displayCharPositionWrite ( 11,0 );
+            displayStringWrite( temperatureString );
+            displayCharPositionWrite ( 14,0 );
+            displayStringWrite( "'C" );
+
+            displayCharPositionWrite( 8,1 );
+            displayStringWrite( "        " );
+            displayCharPositionWrite ( 8,1 );
+        
+            if ( waterSensorRead() ) {
+                displayStringWrite( "Lleno" );
+            } else {
+                displayStringWrite( "Vacio" );
+            }
         }
-
     } else {
         accumulatedDisplayTime =
             accumulatedDisplayTime + SYSTEM_TIME_INCREMENT_MS;        
