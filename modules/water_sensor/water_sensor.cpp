@@ -3,6 +3,7 @@
 #include "mbed.h"
 
 #include "water_sensor.h"
+#include "alarm.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -24,7 +25,7 @@ DigitalIn  tankWaterSensor(D5);    //Sensor de agua en tanque
 
 void waterSensorInit()
 {
-    tankWaterSensor.mode(PullDown);
+    tankWaterSensor.mode(PullUp);
 }
 
 void waterSensorUpdate()
