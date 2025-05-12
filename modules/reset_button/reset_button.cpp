@@ -4,9 +4,6 @@
 #include "arm_book_lib.h"
 
 #include "reset_button.h"
-#include "water_sensor.h"
-#include "irrigation_valve.h"
-#include "alarm.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -23,7 +20,7 @@ DigitalIn  resetButton(D2);        //Botón de Reset para apagar el buzzer
 //=====[Declaration and initialization of private global variables]============
 
 //=====[Declarations (prototypes) of private functions]========================
-static bool readResetButton();
+static bool _resetButtonRead();
 
 //=====[Implementations of public functions]===================================
 
@@ -38,16 +35,16 @@ void resetButtonUpdate()
 
 bool resetButtonRead()
 {
-    return resetButton;
+    return _resetButtonRead();
 }
 
 //=====[Implementations of private functions]==================================
 
-static bool readResetButton(){
-    if(resetButton){
+static bool _resetButtonRead(){
+    if(resetButton.read()){
         delay(DEBOUNCE_BUTTON_TIME_MS);
-        if(resetButton)
-            return true;
+        if(resetButton.read())
+            return ON;
     }
-    return false;
+    return OFF;
 }
