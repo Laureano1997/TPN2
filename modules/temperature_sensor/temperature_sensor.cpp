@@ -24,6 +24,7 @@ AnalogIn lm35(A0);
 
 float lm35TemperatureC = 0.0;
 float lm35ReadingsArray[LM35_NUMBER_OF_AVG_SAMPLES];
+char str[4];
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -83,4 +84,24 @@ float celsiusToFahrenheit( float tempInCelsiusDegrees )
 static float analogReadingScaledWithTheLM35Formula( float analogReading )
 {
     return ( analogReading * 3.3 / 0.01 );
+}
+
+void floatToStr(char str[], float num) {
+    if (num < 0) {      //Si es negativo agrego un - al comienzo
+        str[0] = '-';
+        num = -num; 
+    }
+    else{               //Sino agrego un espacio
+        str[0] = ' ';
+    }
+
+    int aux = (int)((num + 0.05) * 100); // Aplico redondeo 12.36 -> 12.41 -> 1241 y me quedo con los primeros tres valores
+    int integer = aux / 100;       // Parte entera: 12
+    int decimal = aux % 100;      // Parte decimal: 41
+
+    str[1] = (integer / 10) + '0'; // Decena
+    str[2] = (integer % 10) + '0'; // Unidad
+    //str[3] = ',';                 // Separador decimal
+    //str[4] = (decimal / 10) + '0'; // Décima
+    str[3] = '\0';
 }
