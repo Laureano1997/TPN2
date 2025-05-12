@@ -5,16 +5,15 @@
 
 //=====[Declaration of public defines]=========================================
 
+#define UPDATE_TIME_SYSTEM_STATUS 10000
+
 //=====[Declaration of public data types]======================================
 
 //=====[Declarations (prototypes) of public functions]=========================
 
 void pcSerialComInit();
-char pcSerialComCharRead();
 void pcSerialComStringWrite( const char* str );
 void pcSerialComUpdate();
-bool pcSerialComCodeCompleteRead();
-void pcSerialComCodeCompleteWrite( bool state );
 
 //=====[#include guards - end]=================================================
 
