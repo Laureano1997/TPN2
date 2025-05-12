@@ -7,7 +7,8 @@
 
 #include "alarm.h"
 #include "user_interface.h"
-#include "pc_serial_com.h"
+//#include "pc_serial_com.h"
+#include "water_sensor.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -26,11 +27,12 @@ typedef struct systemEvent {
 
 //=====[Declaration and initialization of private global variables]============
 
-static bool sirenLastState = OFF;
-static bool gasLastState   = OFF;
-static bool tempLastState  = OFF;
-static bool ICLastState    = OFF;
-static bool SBLastState    = OFF;
+static bool alarmLEDLastState = OFF;
+static bool alarmBuzzerLastState = OFF;
+//static bool soilMoistureLastState = OFF;
+//static bool irrigationValveLastState = OFF;
+//static bool waterLastState = OFF;
+//static bool SBLastState    = OFF;
 static int eventsIndex     = 0;
 static systemEvent_t arrayOfStoredEvents[EVENT_LOG_MAX_STORAGE];
 
@@ -44,25 +46,21 @@ static void eventLogElementStateUpdate( bool lastState,
 
 void eventLogUpdate()
 {
-    bool currentState = sirenStateRead();
-    eventLogElementStateUpdate( sirenLastState, currentState, "ALARM" );
-    sirenLastState = currentState;
+    bool currentState = alarmLEDStateRead();
+    eventLogElementStateUpdate( alarmLEDLastState, currentState, "ALARM_LED" );
+    alarmLEDLastState = currentState;
+    
+    currentState = alarmBuzzerStateRead();
+    eventLogElementStateUpdate(alarmBuzzerLastState, currentState, "ALARM_BUZZER" );
+    alarmBuzzerLastState = currentState;
 
-    currentState = gasDetectorStateRead();
-    eventLogElementStateUpdate( gasLastState, currentState, "GAS_DET" );
-    gasLastState = currentState;
-
-    currentState = overTemperatureDetectorStateRead();
-    eventLogElementStateUpdate( tempLastState, currentState, "OVER_TEMP" );
-    tempLastState = currentState;
-
-    currentState = incorrectCodeStateRead();
-    eventLogElementStateUpdate( ICLastState, currentState, "LED_IC" );
-    ICLastState = currentState;
+    /*currentState = waterSensorRead();
+    eventLogElementStateUpdate( waterLastState, currentState, "EMPTY_TANK" );
+    waterLastState = currentState;
 
     currentState = systemBlockedStateRead();
-    eventLogElementStateUpdate( SBLastState ,currentState, "LED_SB" );
-    SBLastState = currentState;
+    eventLogElementStateUpdate( SBLastState ,currentState, "SYSTEM_BLOCKED" );
+    SBLastState = currentState;*/
 }
 
 int eventLogNumberOfStoredEvents()
@@ -99,8 +97,8 @@ void eventLogWrite( bool currentState, const char* elementName )
         eventsIndex = 0;
     }
 
-    pcSerialComStringWrite(eventAndStateStr);
-    pcSerialComStringWrite("\r\n");
+    //pcSerialComStringWrite(eventAndStateStr);
+    //pcSerialComStringWrite("\r\n");
 }
 
 //=====[Implementations of private functions]==================================

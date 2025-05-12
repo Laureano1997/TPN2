@@ -29,4 +29,3 @@ void eventLogWrite( bool currentState, const char* elementName );
 //=====[#include guards - end]=================================================
 
 #endif // _EVENT_LOG_H_
-
