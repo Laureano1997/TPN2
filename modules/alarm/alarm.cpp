@@ -5,6 +5,12 @@
 
 #include "alarm.h"
 #include "greenhouse_system.h"
+#include "water_sensor.h"
+#include "temperature_sensor.h"
+#include "reset_button.h"
+#include "soil_moisture_sensor.h"
+#include "irrigation_valve.h"
+
 
 //=====[Declaration of private defines]========================================
 
@@ -21,8 +27,11 @@ DigitalOut emptyWaterBuzzer(LED2);//D12);  //Buzzer de alarma (Ausencia de agua 
 
 //=====[Declaration and initialization of private global variables]============
 
+static bool irrigationValveState = OFF;
+static bool waterSensorState = ON;
 static bool alarmLEDState = OFF;
 static bool alarmBuzzerState = OFF;
+static bool timeReset = OFF;
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -30,6 +39,11 @@ static bool alarmBuzzerState = OFF;
 
 void alarmInit()
 {
+    waterSensorInit();
+    temperatureSensorInit();
+    resetButtonInit();
+    soilMoistureSensorInit();
+    irrigationValveInit();
     emptyWaterLED = OFF;
     emptyWaterBuzzer = OFF;
 }
@@ -56,14 +70,50 @@ void alarmBuzzerStateWrite( bool state )
 
 void alarmUpdate()
 {
+    temperatureSensorUpdate();
+    waterSensorUpdate();
+    soilMoistureSensorUpdate();
+    irrigationValveUpdate();
+
     static int accumulatedTimeAlarm = 0;
     accumulatedTimeAlarm = accumulatedTimeAlarm + SYSTEM_TIME_INCREMENT_MS;
     
+    if(resetButtonRead()){
+        alarmBuzzerState = OFF;
+        timeReset = OFF;
+    }
+
+    waterSensorState = waterSensorRead();
+
+    if(!waterSensorState){
+        alarmLEDState = ON;
+        irrigationValveState = ON;
+    }
+    else{
+        alarmLEDState = OFF;
+        if(soilMoistureSensorRead())
+            irrigationValveState = ON;
+        else
+            irrigationValveState = OFF;
+    }
+
+    irrigationValveWrite(irrigationValveState);
+
     if( alarmLEDState ) {
         emptyWaterLED = ON;
+        if(!timeReset){
+            timeReset = ON;
+            accumulatedTimeAlarm = 0;
+        }
     } else {
-        emptyWaterBuzzer = OFF;
+        emptyWaterLED = OFF;
     }
+
+    if(emptyWaterLED && accumulatedTimeAlarm > ALARM_BUZZ_ACTIVATION_TIME)
+        alarmBuzzerState = ON;
+
+    if(!emptyWaterLED && !alarmBuzzerState)
+        accumulatedTimeAlarm = 0;
 
     if( alarmBuzzerState ) {
         if( accumulatedTimeAlarm >= ALARM_BUZZ_TIME ) {
