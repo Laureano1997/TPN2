@@ -24,7 +24,7 @@ DigitalIn  soilMoistureSensor(D3); //Sensor de Humedad del suelo
 
 void soilMoistureSensorInit()
 {
-    soilMoistureSensor.mode(PullDown);
+    soilMoistureSensor.mode(PullUp);
 }
 
 void soilMoistureSensorUpdate()
@@ -33,7 +33,7 @@ void soilMoistureSensorUpdate()
 
 bool soilMoistureSensorRead()
 {
-    return soilMoistureSensor;
+    return soilMoistureSensor.read();
 }
 
 //=====[Implementations of private functions]==================================
